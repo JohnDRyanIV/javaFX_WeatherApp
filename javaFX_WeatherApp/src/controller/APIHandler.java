@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -9,6 +11,7 @@ import com.squareup.okhttp.Response;
 
 import model.QueryData;
 import model.WeatherData;
+import model.WeatherDatum;
 
 public class APIHandler {
 	
@@ -22,7 +25,10 @@ public class APIHandler {
 	
 	private final String BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"; // base URL of visual crossing weather API
 	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ"; // free API key for weather crossing weather API (1000 calls/day)
+	public String buildRequest;
 	public String requestResult = "";
+	private final Gson gson = new Gson();
+	private final OkHttpClient client = new OkHttpClient();
 		/**
 		 * This class utilizes a user query stored in a QueryData object to construct
 		 * an API call to the Visual Crossing weather API
@@ -30,30 +36,75 @@ public class APIHandler {
 		 * @return - String representing info from API call
 		 * @throws IOException
 		 */
-	public WeatherData getRequest(QueryData qData) throws IOException {
-		OkHttpClient client = new OkHttpClient();
+	public WeatherData fetchWeatherData(QueryData qData, boolean isDays) throws IOException {
 		// Gathering data for api call
 		String location = qData.getLocation();
 		String startDate = qData.getStartDate().toString();
 		String endDate = qData.getEndDate().toString();
+		
 		// Constructing API call
-		Request request = new Request.Builder().url(BASE_URL + location + "/" + startDate + "/" + endDate + "?key=" + API_KEY).build(); // TODO might need to specify what format to receive information in
+		buildRequest = BASE_URL + location + "/" + startDate + "/" + endDate + "?key=" + API_KEY;
+		
+		if(isDays) {
+			buildRequest += "&include=days";
+		}
+		else {
+			buildRequest += "&include=hours";
+		}
+		// Get only fields that I'm interested in from api call
+		/** Current elements
+		 * Temperature
+		 * Feels like temperature
+		 * Total precipitation
+		 * Precipitation chance
+		 * Dewpoint temperature
+		 * Wind speed
+		 * Wind direction
+		 * Pressure
+		 */
+		buildRequest += "&elements=temp,feelslike,precip,precipprob,dew,windspeed,winddir,pressure";
+		
+		Request request = new Request.Builder().url(buildRequest).build(); // TODO might need to specify what format to receive information in
 		// Sending synchronous API call
 		Call call = client.newCall(request);
-		Response response = call.execute();
+		try {	// Try to call the API, if fail then throw exception and bring up dialog box alerting user
+			Response response = call.execute();
+			if(!response.isSuccessful()) {
+				throw new IOException("Response unsuccessful: " + response);
+			}
+			
+			requestResult = response.body().string();
+			
+			return parseWeatherData(response, isDays);
+		}
+		catch(Exception e) {
+			// TODO pull up window alerting user
+		}
 		
-		// If response code indicates that resource isn't reachable, post dialog box informing user & return to main view
-		
-		// Returns weatherData object created in readRequest. Should never be the case that successfully retrieved query can't be resolved into weather data object
-		return readRequest(response);
+		return null;
 
 		
 	}
 	
-	public WeatherData readRequest(Response response) {
+	public WeatherData parseWeatherData(Response response, boolean isDays) {
 		
-		
+		JsonObject json = gson.fromJson(response.toString(), JsonObject.class);
 		WeatherData data = new WeatherData();
+		if(isDays) {
+			data.isDaily = true;
+		}
+		else {
+			data.isHourly = true;
+		}
+		
+		// Extract fields from the response
+		
+		
+		// Create weather object based on these fields
+		WeatherDatum currDatum = null; // TODO initialize a weatherDatum object
+		//data.addWeatherDatum(currDatum);
+		
+		// Add weatherDatum object to WeatherData object
 		// make a for loop going through all steps of data from api call, extracting necessary variables & adding them to weatherdata object
 		// TODO
 		

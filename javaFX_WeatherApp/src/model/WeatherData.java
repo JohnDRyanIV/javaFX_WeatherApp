@@ -8,16 +8,28 @@ public class WeatherData {
 	// constructing a chart out of it way easier.
 	
 	public String title;
-	public ArrayList<Double> actualTemp = new ArrayList<Double>();
-	public ArrayList<Double> feelsLikeTemp = new ArrayList<Double>();
-	public ArrayList<Double> precipAmount = new ArrayList<Double>();
-	public ArrayList<Double> precipChance = new ArrayList<Double>();
-	public ArrayList<Double> dewPoint = new ArrayList<Double>();
-	public ArrayList<Double> windSpeed = new ArrayList<Double>();
-	public ArrayList<Integer> windAngle = new ArrayList<Integer>();
-	public ArrayList<String> windDirection = new ArrayList<String>();
-	public ArrayList<Double> pressure = new ArrayList<Double>();
+	
+	public ArrayList<WeatherDatum> data = new ArrayList<WeatherDatum>();
+	
 	public boolean isHourly;
 	public boolean isDaily;
+	
+	
+	public void addWeatherDatum(WeatherDatum wd, boolean isHour) {
+		data.add(wd);
+		if(isHour) {
+			isHourly = true;
+			isDaily = false;
+		}
+		else {
+			isHourly = false;
+			isDaily = true;
+		}
+	}
+	
+	// TODO add exception handling if index out of bounds
+	public WeatherDatum getWeatherDatum(int wdIndex) {
+		return data.get(wdIndex);
+	}
 
 }

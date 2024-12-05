@@ -19,6 +19,11 @@
 	    <artifactId>javafx-controls</artifactId>
 	    <version>21.0.5</version>
     </dependency>
+	<dependency>
+		<groupId>CS067</groupId>
+		<artifactId>CS067</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
    </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
