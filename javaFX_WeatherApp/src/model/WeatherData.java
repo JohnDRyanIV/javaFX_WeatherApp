@@ -2,34 +2,39 @@ package model;
 
 import java.util.ArrayList;
 
-public class WeatherData {
-	
-	// No real reason to protect this info, and making it public should make
-	// constructing a chart out of it way easier.
-	
+public class WeatherData extends ArrayList<WeatherDatum> {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2446544465857819183L;
 	public String title;
-	
-	public ArrayList<WeatherDatum> data = new ArrayList<WeatherDatum>();
-	
-	public boolean isHourly;
-	public boolean isDaily;
-	
-	
-	public void addWeatherDatum(WeatherDatum wd, boolean isHour) {
-		data.add(wd);
-		if(isHour) {
-			isHourly = true;
-			isDaily = false;
-		}
-		else {
-			isHourly = false;
-			isDaily = true;
-		}
-	}
-	
-	// TODO add exception handling if index out of bounds
-	public WeatherDatum getWeatherDatum(int wdIndex) {
-		return data.get(wdIndex);
-	}
+    public boolean isHourly;
+    public boolean isDaily;
 
+    /**
+     * Adds a WeatherDatum and sets the type (hourly or daily).
+     * 
+     * @param wd     The WeatherDatum to add.
+     * @param isHour True if the data is hourly; false if daily.
+     */
+    public void addWeatherDatum(WeatherDatum wd, boolean isHour) {
+        this.add(wd); // Use ArrayList's add method
+        if (isHour) {
+            isHourly = true;
+            isDaily = false;
+        } else {
+            isHourly = false;
+            isDaily = true;
+        }
+    }
+
+    /**
+     * Get the WeatherDatum at a specific index.
+     * 
+     * @param wdIndex The index to retrieve.
+     * @return The WeatherDatum at the specified index.
+     */
+    public WeatherDatum getWeatherDatum(int wdIndex) {
+        return this.get(wdIndex); // Use ArrayList's get method
+    }
 }

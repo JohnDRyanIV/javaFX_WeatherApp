@@ -19,12 +19,10 @@ public class WeatherDatum {
 	public double precipChance;
 	public double dewpoint;
 	public double windSpeed;
-	public int windAngle;
-	public String windDirection;
 	public double pressure;
 	public LocalDate date;
 	
-	public WeatherDatum(double actTemp, double hTemp, double lTemp, double feelTemp, double pAmt, double pCha, double dewp,
+	public WeatherDatum(double actTemp, double feelTemp, double pAmt, double pCha, double dewp,
 			double wSpeed, int wAngle, double press, LocalDate date) {
 		actualTemp = actTemp;
 		feelsLikeTemp = feelTemp;
@@ -32,18 +30,8 @@ public class WeatherDatum {
 		precipChance = pCha;
 		dewpoint = dewp;
 		windSpeed = wSpeed;
-		windAngle = wAngle;
 		pressure = press;
 		this.date = date;
-		
-		setWindDirection(windAngle);
-	}
-
-	/**
-	 * @param windAngle2
-	 */
-	private void setWindDirection(int windAngle) {
-		// TODO Auto-generated method stub
 		
 	}
 

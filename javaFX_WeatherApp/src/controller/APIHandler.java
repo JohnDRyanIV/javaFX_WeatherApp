@@ -1,8 +1,11 @@
 package controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
@@ -62,7 +65,7 @@ public class APIHandler {
 		 * Wind direction
 		 * Pressure
 		 */
-		buildRequest += "&elements=temp,feelslike,precip,precipprob,dew,windspeed,winddir,pressure";
+		buildRequest += "&elements=temp,feelslike,precip,precipprob,dew,windspeed,winddir,pressure,datetime";
 		
 		Request request = new Request.Builder().url(buildRequest).build(); // TODO might need to specify what format to receive information in
 		// Sending synchronous API call
@@ -75,7 +78,7 @@ public class APIHandler {
 			
 			requestResult = response.body().string();
 			
-			return parseWeatherData(response, isDays);
+			return parseWeatherData(requestResult, isDays);
 		}
 		catch(Exception e) {
 			// TODO pull up window alerting user
@@ -86,10 +89,45 @@ public class APIHandler {
 		
 	}
 	
-	public WeatherData parseWeatherData(Response response, boolean isDays) {
+	public WeatherData parseWeatherData(String response, boolean isDays) {
 		
 		JsonObject json = gson.fromJson(response.toString(), JsonObject.class);
 		WeatherData data = new WeatherData();
+		JsonArray daysArray = json.getAsJsonArray("days");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		for(int i = 0; i < daysArray.size(); i++) {
+			JsonObject dayObject = daysArray.get(i).getAsJsonObject();
+			
+			double actualTemp = dayObject.get("temp").getAsDouble();
+	        double feelsLikeTemp = dayObject.get("feelslike").getAsDouble();
+	        double precipAmount = dayObject.get("precip").getAsDouble();
+	        double precipChance = dayObject.has("precipprob") ? dayObject.get("precipprob").getAsDouble() : 0;
+	        double dewpoint = dayObject.get("dew").getAsDouble();
+	        double windSpeed = dayObject.get("windspeed").getAsDouble();
+	        int windAngle = dayObject.get("winddir").getAsInt(); // Get wind direction as an integer
+	        double pressure = dayObject.get("pressure").getAsDouble();
+	        
+	        String dateString = dayObject.get("datetime").getAsString();
+	        LocalDate date = LocalDate.parse(dateString, formatter);
+
+	        
+	        WeatherDatum weatherDatum = new WeatherDatum
+	        	(
+	            actualTemp, // Actual Temp
+	            feelsLikeTemp,
+	            precipAmount,
+	            precipChance,
+	            dewpoint,
+	            windSpeed,
+	            windAngle,  // Wind Angle
+	            pressure,
+	            date
+	        );
+	        
+	        data.addWeatherDatum(weatherDatum, false);
+
+		}
+		
 		if(isDays) {
 			data.isDaily = true;
 		}
@@ -97,18 +135,7 @@ public class APIHandler {
 			data.isHourly = true;
 		}
 		
-		// Extract fields from the response
-		
-		
-		// Create weather object based on these fields
-		WeatherDatum currDatum = null; // TODO initialize a weatherDatum object
-		//data.addWeatherDatum(currDatum);
-		
-		// Add weatherDatum object to WeatherData object
-		// make a for loop going through all steps of data from api call, extracting necessary variables & adding them to weatherdata object
-		// TODO
-		
-		return null;
+		return data;
 		
 	}
 	
