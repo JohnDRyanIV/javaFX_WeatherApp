@@ -3,13 +3,12 @@ package model;
 import java.time.LocalDate;
 
 public class QueryData {
-	
+
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private String location;
-	
-	public QueryData(LocalDate start, LocalDate end, String loc)
-	{
+
+	public QueryData(LocalDate start, LocalDate end, String loc) {
 		startDate = start;
 		endDate = end;
 		location = loc;
@@ -38,8 +37,5 @@ public class QueryData {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	
-	
 
 }
-

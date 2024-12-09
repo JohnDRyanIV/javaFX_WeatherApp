@@ -18,30 +18,23 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 /**
- * LocalDate <---> JSON support
- * Learned how to implement in this video: https://www.youtube.com/watch?v=j2vWhohxBVA
- * Default implementation of LocalDate objects in Java 8+ doesn't allow for easy serialization, so
- * custom serialization and deserialization methods are needed for json.
- * I learned about serialization when I was making a python project a couple summers ago
+ * LocalDate <---> JSON support Learned how to implement in this video:
+ * https://www.youtube.com/watch?v=j2vWhohxBVA Default implementation of
+ * LocalDate objects in Java 8+ doesn't allow for easy serialization, so custom
+ * serialization and deserialization methods are needed for json. I learned
+ * about serialization when I was making a python project a couple summers ago
  */
 public class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
 
 	@Override
 	public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-			throws JsonParseException 
-	{
+			throws JsonParseException {
 		return LocalDate.parse(json.getAsString(), DateTimeFormatter.ISO_LOCAL_DATE);
 	}
 
 	@Override
-	public JsonElement serialize(LocalDate localDate, Type typeOfSrc, JsonSerializationContext context) 
-	{
-		return new JsonPrimitive (
-			localDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
-		);
+	public JsonElement serialize(LocalDate localDate, Type typeOfSrc, JsonSerializationContext context) {
+		return new JsonPrimitive(localDate.format(DateTimeFormatter.ISO_LOCAL_DATE));
 	}
-	
-	
-	
 
 }
