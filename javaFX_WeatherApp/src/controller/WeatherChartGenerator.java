@@ -7,6 +7,11 @@ import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.StackPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import model.ChartWithTooltip;
 import model.WeatherData;
 import model.WeatherDatum;
 
@@ -30,7 +35,7 @@ public class WeatherChartGenerator {
 	 *                    1 for actualTemp, 2 for feelsLikeTemp, etc.)
 	 * @return A LineChart representing the selected metric over time.
 	 */
-	public Chart generateChart(int metricIndex) {
+	public ChartWithTooltip generateChart(int metricIndex) {
 		// Create axes
 		CategoryAxis xAxis = new CategoryAxis();
 		NumberAxis yAxis = new NumberAxis();
@@ -158,9 +163,32 @@ public class WeatherChartGenerator {
 		chart.setTitle(title);
 		chart.getData().add(series);
 
+		// Make elements accessible on mouse hover
+		Text infoText = new Text();
+
+		// Set up the mouse hover event
+		Tooltip tooltip = new Tooltip();
+		chart.setOnMouseMoved((MouseEvent event) -> {
+			double mouseX = event.getX();
+			double mouseY = event.getY();
+
+			String xValue = xAxis.getValueForDisplay(mouseX);
+			Number yValue = yAxis.getValueForDisplay(mouseY);
+
+			if (xValue != null && yValue != null) {
+				tooltip.setText("X: " + xValue + ", Y: " + yValue);
+				tooltip.show(chart, event.getScreenX(), event.getScreenY());
+			} else {
+				tooltip.hide(); // Hide tooltip if mouse is not within bounds of graph
+			}
+		});
+
 		chart.setCreateSymbols(false); // Disable circular symbols for data points
 
-		return chart;
+		ChartWithTooltip toolChart = new ChartWithTooltip(chart, tooltip);
+
+		return toolChart;
+
 	}
 
 }

@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 import java.net.ConnectException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,9 +25,9 @@ public class APIHandler {
 	 * https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/[location]/[date1]/[date2]?key=YOUR_API_KEY
 	 * dates should be in format of yyyy-mm-dd
 	 */
-	
+
 	// base URL of visual crossing weather API
-	private final String BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/"; 
+	private final String BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
 	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ"; // free API key for weather crossing weather API (1000
 																// calls/day, each day retrieved counts as 1 call)
 	public String buildRequest;
@@ -114,7 +113,7 @@ public class APIHandler {
 		WeatherData data = new WeatherData(); // WeatherData stored here
 		JsonArray daysArray = json.getAsJsonArray("days"); // Splits json response into array by header "days"
 		// allows reading of dates from response
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); 
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 		double actualTemp, feelsLikeTemp, precipAmount, precipChance, dewpoint, windSpeed, pressure;
 
