@@ -96,23 +96,29 @@ public class APIHandler {
 		
 	}
 	
+	/**
+	 * TODO TODO TODO
+	 * @param response
+	 * @return
+	 */
 	public WeatherData parseWeatherData(String response) {
 		
 		JsonObject json = gson.fromJson(response.toString(), JsonObject.class);
 		WeatherData data = new WeatherData();
 		JsonArray daysArray = json.getAsJsonArray("days");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        
 		for(int i = 0; i < daysArray.size(); i++) {
 			JsonObject dayObject = daysArray.get(i).getAsJsonObject();
 			
 			double actualTemp = dayObject.get("temp").getAsDouble();
-	        double feelsLikeTemp = dayObject.get("feelslike").getAsDouble();
-	        double precipAmount = dayObject.get("precip").getAsDouble();
-	        double precipChance = dayObject.has("precipprob") ? dayObject.get("precipprob").getAsDouble() : 0;
-	        double dewpoint = dayObject.get("dew").getAsDouble();
-	        double windSpeed = dayObject.get("windspeed").getAsDouble();
-	        int windAngle = dayObject.get("winddir").getAsInt(); // Get wind direction as an integer
-	        double pressure = dayObject.get("pressure").getAsDouble();
+			double feelsLikeTemp = dayObject.get("feelslike").getAsDouble();
+			double precipAmount = dayObject.get("precip").getAsDouble();
+			double precipChance = dayObject.has("precipprob") ? dayObject.get("precipprob").getAsDouble() : 0;
+			double dewpoint = dayObject.get("dew").getAsDouble();
+			double windSpeed = dayObject.get("windspeed").getAsDouble();
+			int windAngle = dayObject.get("winddir").getAsInt(); // Get wind direction as an integer
+			double pressure = dayObject.get("pressure").getAsDouble();
 	        
 	        String dateString = dayObject.get("datetime").getAsString();
 	        LocalDate date = LocalDate.parse(dateString, formatter);

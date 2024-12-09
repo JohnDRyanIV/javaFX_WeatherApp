@@ -6,7 +6,6 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  * This class contains collected weather data for a specific point in time

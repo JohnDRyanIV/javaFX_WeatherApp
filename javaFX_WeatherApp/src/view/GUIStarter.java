@@ -5,7 +5,6 @@
  */
 package view;
 
-import Week9.Main;
 import controller.APIHandler;
 import model.WeatherData;
 import model.WeatherDatum;

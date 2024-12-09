@@ -1,13 +1,9 @@
 package view;
 
-import java.util.ArrayList;
-
 import controller.WeatherChartGenerator;
 import javafx.application.Application;
-import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
