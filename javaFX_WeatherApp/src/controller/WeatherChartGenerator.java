@@ -116,6 +116,8 @@ public class WeatherChartGenerator {
         LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
         chart.setTitle(title);
         chart.getData().add(series);
+        
+        chart.setCreateSymbols(false); // Disable circular symbols for data points
 
         return chart;
     }

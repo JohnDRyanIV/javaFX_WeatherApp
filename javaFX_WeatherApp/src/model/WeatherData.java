@@ -8,8 +8,6 @@ public class WeatherData extends ArrayList<WeatherDatum> {
 	 */
 	private static final long serialVersionUID = -2446544465857819183L;
 	public String title;
-    public boolean isHourly;
-    public boolean isDaily;
 
     /**
      * Adds a WeatherDatum and sets the type (hourly or daily).
@@ -17,15 +15,8 @@ public class WeatherData extends ArrayList<WeatherDatum> {
      * @param wd     The WeatherDatum to add.
      * @param isHour True if the data is hourly; false if daily.
      */
-    public void addWeatherDatum(WeatherDatum wd, boolean isHour) {
+    public void addWeatherDatum(WeatherDatum wd) {
         this.add(wd); // Use ArrayList's add method
-        if (isHour) {
-            isHourly = true;
-            isDaily = false;
-        } else {
-            isHourly = false;
-            isDaily = true;
-        }
     }
 
     /**

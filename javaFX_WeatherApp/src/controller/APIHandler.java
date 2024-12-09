@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -12,6 +13,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import model.ImproperDateSelectionException;
+import model.InvalidLocationException;
 import model.QueryData;
 import model.WeatherData;
 import model.WeatherDatum;
@@ -38,22 +41,22 @@ public class APIHandler {
 		 * @param data - Query used to construct API call
 		 * @return - String representing info from API call
 		 * @throws IOException
+		 * @throws InternetException 
 		 */
-	public WeatherData fetchWeatherData(QueryData qData, boolean isDays) throws IOException {
+	public WeatherData fetchWeatherData(QueryData qData) throws ConnectException, ImproperDateSelectionException, InvalidLocationException {
 		// Gathering data for api call
 		String location = qData.getLocation();
 		String startDate = qData.getStartDate().toString();
 		String endDate = qData.getEndDate().toString();
 		
+		// If dates won't make valid query, throw exception and give user error message in calling function
+		if (qData.getStartDate().isAfter(qData.getEndDate())) {
+			throw new ImproperDateSelectionException();
+		}
+		
 		// Constructing API call
 		buildRequest = BASE_URL + location + "/" + startDate + "/" + endDate + "?key=" + API_KEY;
 		
-		if(isDays) {
-			buildRequest += "&include=days";
-		}
-		else {
-			buildRequest += "&include=hours";
-		}
 		// Get only fields that I'm interested in from api call
 		/** Current elements
 		 * Temperature
@@ -72,24 +75,28 @@ public class APIHandler {
 		Call call = client.newCall(request);
 		try {	// Try to call the API, if fail then throw exception and bring up dialog box alerting user
 			Response response = call.execute();
-			if(!response.isSuccessful()) {
-				throw new IOException("Response unsuccessful: " + response);
+			if(!response.isSuccessful()) { // If we can't connect to the resource
+				throw new ConnectException("Response unsuccessful: " + response);
 			}
 			
 			requestResult = response.body().string();
 			
-			return parseWeatherData(requestResult, isDays);
+			if(requestResult.equals("Bad API Request:Invalid location parameter value.")) {
+				// if location entered by user is invalid
+				throw new InvalidLocationException();
+			}
+			
+			return parseWeatherData(requestResult);
 		}
-		catch(Exception e) {
-			// TODO pull up window alerting user
+		catch (Exception e) {
+			// catch-all for any other exceptions, add as needed
+			e.printStackTrace();
 		}
-		
 		return null;
-
 		
 	}
 	
-	public WeatherData parseWeatherData(String response, boolean isDays) {
+	public WeatherData parseWeatherData(String response) {
 		
 		JsonObject json = gson.fromJson(response.toString(), JsonObject.class);
 		WeatherData data = new WeatherData();
@@ -124,15 +131,8 @@ public class APIHandler {
 	            date
 	        );
 	        
-	        data.addWeatherDatum(weatherDatum, false);
+	        data.addWeatherDatum(weatherDatum);
 
-		}
-		
-		if(isDays) {
-			data.isDaily = true;
-		}
-		else {
-			data.isHourly = true;
 		}
 		
 		return data;
