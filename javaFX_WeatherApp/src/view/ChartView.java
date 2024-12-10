@@ -1,32 +1,36 @@
+/**
+ * @author John Ryan - john.ryan@drake.edu
+ * CS 067 - Fall 2024
+ * Dec 9th, 2024
+ */
 package view;
 
 import controller.WeatherChartGenerator;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.chart.Chart;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.WeatherData;
 
 public class ChartView extends Application {
 
-	WeatherData wd = new WeatherData();
-
+	WeatherData wd = new WeatherData();	// WeatherData object used to get info for charts
+	
+	/**
+	 * Constructs a new chart view and assigns value to its weatherData objct
+	 * @param weatherData
+	 */
 	public ChartView(WeatherData weatherData) {
 		wd = weatherData;
 	}
 
+	// Program start
+	@Override
 	public void start(Stage stage) {
-		// Create a FlowPane for chart layout
-		FlowPane charts = new FlowPane();
-		charts.setHgap(20); // Set horizontal gap between charts
-		charts.setVgap(20); // Set vertical gap between charts
-		charts.setPrefWrapLength(640); // Wrap after 640 pixels
-		charts.setStyle("-fx-padding: 10;");
+		FlowPane charts = new FlowPane();	// Create a FlowPane for chart layout
+
 
 		// Add charts to the FlowPane
 		WeatherChartGenerator chartMaker = new WeatherChartGenerator(wd); // Generate charts from WeatherData
@@ -39,13 +43,10 @@ public class ChartView extends Application {
 				chartMaker.generateChart(7).getChart() // Pressure
 		);
 
-		// Make elements accessible on mouse hover
-
 		// Make the FlowPane scrollable
 		ScrollPane scrollPane = new ScrollPane(charts);
 		scrollPane.setFitToWidth(true); // Allow the charts to fit to the width of the ScrollPane
-		StackPane contentWrapper = new StackPane(charts);
-		contentWrapper.setPadding(new Insets(10, 20, 0, 20));
+		StackPane contentWrapper = new StackPane(charts);	// Wrap scrollpane in a content wrapper
 		scrollPane.setContent(contentWrapper);
 		// Create the scene
 		Scene scene = new Scene(new StackPane(scrollPane), 1100, 600);
@@ -53,7 +54,8 @@ public class ChartView extends Application {
 		stage.setTitle("Weather Data Charts");
 		stage.show();
 	}
-
+	
+	// Program launch
 	public static void main(String[] args) {
 		launch();
 	}

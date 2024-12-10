@@ -1,5 +1,11 @@
+/**
+ * @author John Ryan - john.ryan@drake.edu
+ * CS 067 - Fall 2024
+ * Dec 9th, 2024
+ */
 package controller;
 
+import java.io.IOException;
 import java.net.ConnectException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +34,10 @@ public class APIHandler {
 
 	// base URL of visual crossing weather API
 	private final String BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ"; // free API key for weather crossing weather API (1000
-																// calls/day, each day retrieved counts as 1 call)
-	public String buildRequest;
-	public String requestResult = "";
+	// API key for weather crossing weather API (had to pay for professional cause I reached call limit on free)
+	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ"; 
+	private String buildRequest;
+	private String requestResult = "";
 	private final Gson gson = new Gson();
 	private final OkHttpClient client = new OkHttpClient();
 
@@ -66,7 +72,7 @@ public class APIHandler {
 		buildRequest = BASE_URL + location + "/" + startDate + "/" + endDate + "?key=" + API_KEY;
 
 		// Get only fields that program is interested in from API call
-		buildRequest += "&elements=temp,feelslike,precip,precipprob,dew,windspeed,pressure,datetime";
+		buildRequest += "&include=days&elements=temp,feelslike,precip,precipprob,dew,windspeed,pressure,datetime";
 		/**
 		 * Current elements Temperature Feels like temperature Total precipitation
 		 * Precipitation chance Dewpoint temperature Wind speed Pressure Date
@@ -75,28 +81,35 @@ public class APIHandler {
 		Request request = new Request.Builder().url(buildRequest).build();
 		// Sending API call
 		Call call = client.newCall(request);
-		try { // Try to call the API, if fail then throw exception and output error message
-				// alerting user
-			Response response = call.execute();
-			if (!response.isSuccessful()) { // If we can't connect to the resource
-				throw new ConnectException("Response unsuccessful: " + response);
-			}
-			// Turn API result into String (response.toString doesn't work, need to get from
-			// body)
-			requestResult = response.body().string();
+		try {
+	        // Execute API call
+	        Response response = call.execute();
 
-			// if location entered by user is invalid
-			if (requestResult.equals("Bad API Request:Invalid location parameter value.")) {
-				throw new InvalidLocationException();
-			}
-			// TODO - IF JSON RESPONSE IS VAILD, SAVE IT SOMEWHERE FOR LATER RETRIEVAL
-			// if no errors, calls parseWeatherData function to construct weatherdata object
-			return parseWeatherData(requestResult);
-		} catch (Exception e) {
-			// catch-all for any other exceptions, add more exceptions as they're found
-			e.printStackTrace();
-		}
-		return null;
+	        if (!response.isSuccessful()) {
+	            String errorBody = response.body() != null ? response.body().string() : "";
+	            
+	            // Check if it's an invalid location error
+	            if (errorBody.contains("Invalid location parameter value")) {
+	                throw new InvalidLocationException();
+	            }
+
+	            // If not an invalid location, treat as a general connection error
+	            throw new ConnectException("Response unsuccessful. Status: " + response.code() + " Message: " + response.message());
+	        }
+
+	        // Turn API result into a String
+	        requestResult = response.body().string();
+	        if (requestResult == null || requestResult.isEmpty()) {
+	            throw new ConnectException("Empty or null response from server.");
+	        }
+
+	        // Parse response into WeatherData
+	        return parseWeatherData(requestResult);
+
+	    } catch (IOException e) {
+	        // Handle IOExceptions, likely connection issues
+	        throw new ConnectException("Failed to connect to the API: " + e.getMessage());
+	    }
 
 	}
 
@@ -134,8 +147,9 @@ public class APIHandler {
 			String dateString = dayObject.get("datetime").getAsString();
 			LocalDate date = LocalDate.parse(dateString, formatter);
 
-			WeatherDatum weatherDatum = new WeatherDatum(actualTemp, // Actual Temp
-					feelsLikeTemp, precipAmount, precipChance, dewpoint, windSpeed, pressure, date);
+			// Creating weatherDatum object to add to weatherData
+			WeatherDatum weatherDatum = new WeatherDatum(
+					actualTemp, feelsLikeTemp, precipAmount, precipChance, dewpoint, windSpeed, pressure, date);
 
 			data.addWeatherDatum(weatherDatum);
 

@@ -1,3 +1,8 @@
+/**
+ * @author John Ryan - john.ryan@drake.edu
+ * CS 067 - Fall 2024
+ * Dec 9th, 2024
+ */
 package view;
 
 import javafx.application.Application;
@@ -14,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
- * Provided information about the program and how to operate it.
+ * This view gives details about the program's capabilities and limitations
  */
 public class AboutView extends Application {
 
@@ -29,6 +34,8 @@ public class AboutView extends Application {
 						+ "Features include:\n\n" + "1. Querying weather data using the Visual Crossing Weather API.\n"
 						+ "2. Displaying charts for various metrics such as temperature, precipitation, and wind speed.\n"
 						+ "3. Scrollable views for easier data exploration.\n\n"
+						+ "Note that this program can only accurate predict weather 15 days in advance, after that it will "
+						+ "start to guess weather trends based on past statistical patterns.\n\n"
 						+ "Author: John Ryan\nEmail:john.ryan@drake.edu\nVersion: 1.0\nYear: 2024");
 
 		lblDescription.setWrapText(true);

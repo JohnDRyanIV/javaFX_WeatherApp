@@ -1,3 +1,8 @@
+/**
+ * @author John Ryan - john.ryan@drake.edu
+ * CS 067 - Fall 2024
+ * Dec 9th, 2024
+ */
 package model;
 
 import java.util.ArrayList;

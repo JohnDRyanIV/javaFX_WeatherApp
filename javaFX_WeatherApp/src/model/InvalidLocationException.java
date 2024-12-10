@@ -1,3 +1,8 @@
+/**
+ * @author John Ryan - john.ryan@drake.edu
+ * CS 067 - Fall 2024
+ * Dec 9th, 2024
+ */
 package model;
 
 /**
@@ -7,7 +12,7 @@ package model;
 public class InvalidLocationException extends Exception {
 
 	/**
-	 * 
+	 * Eclipse complains if there is no serialVersionUID, so here it is
 	 */
 	private static final long serialVersionUID = 2125598706376822615L;
 

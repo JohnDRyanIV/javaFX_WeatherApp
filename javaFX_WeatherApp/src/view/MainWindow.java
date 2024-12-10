@@ -1,3 +1,8 @@
+/**
+ * @author John Ryan - john.ryan@drake.edu
+ * CS 067 - Fall 2024
+ * Dec 9th, 2024
+ */
 package view;
 
 import javafx.application.Application;
@@ -17,6 +22,7 @@ import controller.APIHandler;
 public class MainWindow extends Application {
 
 	// launch the application
+	@Override
 	public void start(Stage s) {
 		// set title for the stage
 		s.setTitle("Weather Data Query");
@@ -31,6 +37,7 @@ public class MainWindow extends Application {
 		Button btnAbout = new Button("About this Program"); // Get information about this program
 		// Label that outputs error messages
 		Label statusLabel = new Label();
+		statusLabel.setWrapText(true); // Ensure text doesn't continue outside of field of view
 
 		// Action for button that submits query
 		btnSubmitQuery.setOnAction(e -> {
@@ -63,8 +70,7 @@ public class MainWindow extends Application {
 				// e1.printStackTrace();
 			} catch (ImproperDateSelectionException e1) { // Second date chosen is before the first date
 				statusLabel.setText(
-						"Improper Date Selection. Dates must be selected\n with the second date occuring after the first\n"
-								+ ", cannot measure a time period greater than 30 days.");
+						"Improper Date Selection. Dates must be selected with the second date occuring after the first.");
 				// e1.printStackTrace();
 			} catch (InvalidLocationException e1) { // Location entered cannot be resolved to real world location
 				statusLabel.setText("Entered location is invalid. Check location again for any errors.");
@@ -76,7 +82,7 @@ public class MainWindow extends Application {
 			}
 		});
 
-		// About button action
+		// About button action, opens up window detailing info about this program
 		btnAbout.setOnAction(e -> {
 			AboutView aboutView = new AboutView();
 			try {
@@ -86,18 +92,15 @@ public class MainWindow extends Application {
 			}
 		});
 
+		// VBox containing everything to be shown in the Main Window
 		VBox layout = new VBox(10, new Label("Location:"), locationInput, new Label("Start Date:"), startDatePicker,
 				new Label("End Date:"), endDatePicker, btnSubmitQuery, btnAbout, statusLabel);
 		layout.setStyle("-fx-padding: 20;");
 
 		// Set up scene and show stage
-		Scene scene = new Scene(layout, 400, 300);
+		Scene scene = new Scene(layout, 400, 350);
 		s.setScene(scene);
 		s.show();
-	}
-
-	public void btnSubmitAction() {
-
 	}
 
 	public static void main(String[] args) {
