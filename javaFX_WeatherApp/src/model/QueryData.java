@@ -8,19 +8,20 @@ package model;
 import java.time.LocalDate;
 
 /**
- * This class holds data that will be required to construct a query. 
+ * This class holds data that will be required to construct a query.
  */
 public class QueryData {
 
-	private LocalDate startDate;	// Start date of query
-	private LocalDate endDate;	// End date of query
-	private String location;		// Location of query
+	private LocalDate startDate; // Start date of query
+	private LocalDate endDate; // End date of query
+	private String location; // Location of query
 
 	/**
 	 * Holds data to be used to construct a query
+	 * 
 	 * @param start - Start date of query
-	 * @param end - end date of query
-	 * @param loc - location of query
+	 * @param end   - end date of query
+	 * @param loc   - location of query
 	 */
 	public QueryData(LocalDate start, LocalDate end, String loc) {
 		setStartDate(start);
@@ -28,11 +29,13 @@ public class QueryData {
 		setLocation(loc);
 	}
 
+	// Getters - Setters
+
 	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDate startDate) {
+	private void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
@@ -40,7 +43,7 @@ public class QueryData {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDate endDate) {
+	private void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 
@@ -48,7 +51,7 @@ public class QueryData {
 		return location;
 	}
 
-	public void setLocation(String location) {
+	private void setLocation(String location) {
 		this.location = location;
 	}
 

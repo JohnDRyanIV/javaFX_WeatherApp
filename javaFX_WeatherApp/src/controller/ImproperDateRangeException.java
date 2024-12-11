@@ -6,8 +6,8 @@
 package controller;
 
 /**
- * This exception occurs if there has been an improperly selected date range.
- * In practice this means that the second date variable occurs before the first
+ * This exception occurs if there has been an improperly selected date range. In
+ * practice this means that the second date variable occurs before the first
  * date variable.
  */
 public class ImproperDateRangeException extends Exception {

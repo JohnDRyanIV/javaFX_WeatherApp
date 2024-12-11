@@ -21,9 +21,21 @@ public class WeatherDatum {
 	private double pressure;
 	private LocalDate date;
 
+	/**
+	 * Constructs a WeatherDatum object based on the parameters
+	 * 
+	 * @param actTemp  // Current actual temp of the weather
+	 * @param feelTemp // Current feels-like temp of the weather
+	 * @param pAmt     // Current precipitation amount
+	 * @param pCha     // Current precipitation chance
+	 * @param dewp     // Current dewpoint
+	 * @param wSpeed   // Current wind speed
+	 * @param press    // Current pressure
+	 * @param d        // Current date
+	 */
 	public WeatherDatum(double actTemp, double feelTemp, double pAmt, double pCha, double dewp, double wSpeed,
 			double press, LocalDate d) {
-		setActualTemp(actualTemp);
+		setActualTemp(actTemp);
 		setFeelsLikeTemp(feelTemp);
 		setPrecipAmount(pAmt);
 		setPrecipChance(pCha);
@@ -32,6 +44,8 @@ public class WeatherDatum {
 		setPressure(press);
 		setDate(d);
 	}
+
+	// Getters - Setters
 
 	public double getActualTemp() {
 		return actualTemp;

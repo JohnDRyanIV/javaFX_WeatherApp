@@ -34,9 +34,10 @@ public class APIHandler {
 
 	// base URL of visual crossing weather API
 	private final String BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
-	// API key for weather crossing weather API (had to pay for professional cause I reached call limit on free)
-	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ"; 
-	private String buildRequest;	// builds on base url
+	// API key for weather crossing weather API (had to pay for professional cause I
+	// reached call limit on free)
+	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ";
+	private String buildRequest; // builds on base url
 	private String requestResult = ""; // converts json response to string for processing
 	private final Gson gson = new Gson(); // Google's gson import help interpret api calls efficiently
 	private final OkHttpClient client = new OkHttpClient(); // OkHttp helps a lot with construction of API calls
@@ -82,34 +83,35 @@ public class APIHandler {
 		// Sending API call
 		Call call = client.newCall(request);
 		try {
-	        // Execute API call
-	        Response response = call.execute();
+			// Execute API call
+			Response response = call.execute();
 
-	        if (!response.isSuccessful()) {
-	            String errorBody = response.body() != null ? response.body().string() : "";
-	            
-	            // Check if it's an invalid location error
-	            if (errorBody.contains("Invalid location parameter value")) {
-	                throw new InvalidLocationException();
-	            }
+			if (!response.isSuccessful()) {
+				String errorBody = response.body() != null ? response.body().string() : "";
 
-	            // If not an invalid location, treat as a general connection error
-	            throw new ConnectException("Response unsuccessful. Status: " + response.code() + " Message: " + response.message());
-	        }
+				// Check if it's an invalid location error
+				if (errorBody.contains("Invalid location parameter value")) {
+					throw new InvalidLocationException();
+				}
 
-	        // Turn API result into a String
-	        requestResult = response.body().string();
-	        if (requestResult == null || requestResult.isEmpty()) {
-	            throw new ConnectException("Empty or null response from server.");
-	        }
+				// If not an invalid location, treat as a general connection error
+				throw new ConnectException(
+						"Response unsuccessful. Status: " + response.code() + " Message: " + response.message());
+			}
 
-	        // Parse response into WeatherData
-	        return parseWeatherData(requestResult);
+			// Turn API result into a String
+			requestResult = response.body().string();
+			if (requestResult == null || requestResult.isEmpty()) {
+				throw new ConnectException("Empty or null response from server.");
+			}
 
-	    } catch (IOException e) {
-	        // Handle IOExceptions, likely connection issues
-	        throw new ConnectException("Failed to connect to the API: " + e.getMessage());
-	    }
+			// Parse response into WeatherData
+			return parseWeatherData(requestResult);
+
+		} catch (IOException e) {
+			// Handle IOExceptions, likely connection issues
+			throw new ConnectException("Failed to connect to the API: " + e.getMessage());
+		}
 
 	}
 
@@ -137,6 +139,7 @@ public class APIHandler {
 
 			// Saving variables
 			actualTemp = dayObject.get("temp").getAsDouble();
+			System.out.println(actualTemp);
 			feelsLikeTemp = dayObject.get("feelslike").getAsDouble();
 			precipAmount = dayObject.get("precip").getAsDouble();
 			precipChance = dayObject.has("precipprob") ? dayObject.get("precipprob").getAsDouble() : 0;
@@ -148,8 +151,8 @@ public class APIHandler {
 			LocalDate date = LocalDate.parse(dateString, formatter);
 
 			// Creating weatherDatum object to add to weatherData
-			WeatherDatum weatherDatum = new WeatherDatum(
-					actualTemp, feelsLikeTemp, precipAmount, precipChance, dewpoint, windSpeed, pressure, date);
+			WeatherDatum weatherDatum = new WeatherDatum(actualTemp, feelsLikeTemp, precipAmount, precipChance,
+					dewpoint, windSpeed, pressure, date);
 
 			data.addWeatherDatum(weatherDatum);
 

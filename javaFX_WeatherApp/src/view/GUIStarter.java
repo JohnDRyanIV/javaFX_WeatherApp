@@ -6,8 +6,9 @@
 package view;
 
 /**
- * This class is just to start the program. In eclipse, I've needed a class to explicitly
- * start the program or else I get an error stating that JavaFX components are missing
+ * This class is just to start the program. In eclipse, I've needed a class to
+ * explicitly start the program or else I get an error stating that JavaFX
+ * components are missing
  */
 public class GUIStarter {
 

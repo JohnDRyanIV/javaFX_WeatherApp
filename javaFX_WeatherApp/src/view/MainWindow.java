@@ -24,9 +24,9 @@ public class MainWindow extends Application {
 	/**
 	 * Launches the main window of the application. From this window, the user can
 	 * enter a location, start date, and end date, and retrieve weather data from
-	 * those parameters. They are alerted if the location they input cannot be found,
-	 * if they left any fields empty, and if they set the end date to before the
-	 * start date.
+	 * those parameters. They are alerted if the location they input cannot be
+	 * found, if they left any fields empty, and if they set the end date to before
+	 * the start date.
 	 */
 	@Override
 	public void start(Stage s) {

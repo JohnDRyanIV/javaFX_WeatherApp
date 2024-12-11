@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter;
 
 import javafx.geometry.Point2D;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.Chart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import model.ChartWithTooltip;
 import model.WeatherData;
 import model.WeatherDatum;
 
@@ -35,11 +35,11 @@ public class WeatherChartGenerator {
 	/**
 	 * Generates a chart based on the specified chartType.
 	 * 
-	 * @param chartType The index corresponding to a field in WeatherDatum (e.g.,
-	 *                    1 for actualTemp, 2 for feelsLikeTemp, etc.)
+	 * @param chartType The index corresponding to a field in WeatherDatum (e.g., 1
+	 *                  for actualTemp, 2 for feelsLikeTemp, etc.)
 	 * @return A LineChart representing the selected chart type over time.
 	 */
-	public ChartWithTooltip generateChart(int chartType) {
+	public Chart generateChart(int chartType) {
 		// Create axes
 		CategoryAxis xAxis = new CategoryAxis();
 		NumberAxis yAxis = new NumberAxis();
@@ -55,7 +55,7 @@ public class WeatherChartGenerator {
 
 		// Format date so it only shows month & day
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd");
-		
+
 		// Determine title and axis labels for chart
 		switch (chartType) {
 		case 1:
@@ -142,11 +142,12 @@ public class WeatherChartGenerator {
 			yAxis.setAutoRanging(false);
 			yAxis.setLowerBound(0);
 			yAxis.setUpperBound(100);
-		} else { // If chart isn't precip chance, use this formula to determine bounds on either side
-			
-				// Adjust y axis
-				// If min and max are equal, give some margin on both sides so they aren't flat
-				// at bottom of chart
+		} else { // If chart isn't precip chance, use this formula to determine bounds on either
+					// side
+
+			// Adjust y axis
+			// If min and max are equal, give some margin on both sides so they aren't flat
+			// at bottom of chart
 			if (Double.compare(minValue, maxValue) == 0) {
 				yAxis.setLowerBound(minValue - 1);
 				yAxis.setUpperBound(minValue + 1);
@@ -168,10 +169,10 @@ public class WeatherChartGenerator {
 		LineChart<String, Number> chart = new LineChart<>(xAxis, yAxis);
 		chart.setTitle(title);
 		chart.getData().add(series);
-		
+
 		// Used to format the tooltips that the chart will give
 		DecimalFormat df = new DecimalFormat("#.##");
-				
+
 		// Set up the mouse hover event
 		// https://stackoverflow.com/questions/31375922/javafx-how-to-correctly-implement-getvaluefordisplay-on-y-axis-of-a-xy-line
 		// above link helped immensely, couldn't get this working correctly without it
@@ -180,27 +181,26 @@ public class WeatherChartGenerator {
 			// Logic to ensure that the right point is being retrieved relative to the mouse
 			Point2D pointInScene = new Point2D(event.getSceneX(), event.getSceneY());
 			double xPosInAxis = xAxis.sceneToLocal(new Point2D(pointInScene.getX(), 0)).getX();
-			double yPosInAxis = yAxis.sceneToLocal(new Point2D(0, pointInScene.getY())).getY(); 
-			
+			double yPosInAxis = yAxis.sceneToLocal(new Point2D(0, pointInScene.getY())).getY();
+
 			String xValue = xAxis.getValueForDisplay(xPosInAxis);
 			double yValue = yAxis.getValueForDisplay(yPosInAxis).doubleValue();
 
 			if (xValue != null) {
 				tooltip.setText("X: " + xValue + "Y: " + df.format(yValue));
-				// +20 in below line are pixel offsets so that the tooltip doesn't disappear the second it appears
+				// +20 in below line are pixel offsets so that the tooltip doesn't disappear the
+				// second it appears
 				tooltip.show(chart, event.getScreenX() + 20, event.getScreenY() + 20);
 			} else {
 				tooltip.hide(); // Hide tooltip if mouse is not within bounds of graph
 			}
 		});
-		 // Hide tooltip when the mouse exits the chart
-	    chart.setOnMouseExited(event -> tooltip.hide());
-	    // Disable circular symbols for data points
+		// Hide tooltip when the mouse exits the chart
+		chart.setOnMouseExited(event -> tooltip.hide());
+		// Disable circular symbols for data points
 		chart.setCreateSymbols(false);
 		// Generate chart to return
-		ChartWithTooltip toolChart = new ChartWithTooltip(chart, tooltip);
-
-		return toolChart;
+		return chart;
 
 	}
 
