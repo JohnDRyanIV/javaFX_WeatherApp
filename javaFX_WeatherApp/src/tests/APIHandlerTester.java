@@ -10,14 +10,14 @@ import java.time.LocalDate;
 import model.QueryData;
 import model.WeatherData;
 import model.WeatherDatum;
-import model.ImproperDateSelectionException;
+import model.ImproperDateRangeException;
 import model.InvalidLocationException;
 
 public class APIHandlerTester {
 
 	public APIHandler aHand = new APIHandler();
 
-	@Test(expected = ImproperDateSelectionException.class)
+	@Test(expected = ImproperDateRangeException.class)
 	public void testFetchWeatherDataWithInvalidDates() throws Exception {
 		// Mock QueryData with invalid dates
 		QueryData queryData = new QueryData(LocalDate.of(2023, 9, 10), LocalDate.of(2023, 9, 1), "London");

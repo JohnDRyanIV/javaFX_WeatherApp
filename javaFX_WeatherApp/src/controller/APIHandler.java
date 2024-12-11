@@ -18,12 +18,15 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import model.ImproperDateSelectionException;
+import model.ImproperDateRangeException;
 import model.InvalidLocationException;
 import model.QueryData;
 import model.WeatherData;
 import model.WeatherDatum;
 
+/**
+ * This class is used to construct API calls and interpret the results of said API calls
+ */
 public class APIHandler {
 
 	/**
@@ -57,7 +60,7 @@ public class APIHandler {
 	 *                                        location
 	 */
 	public WeatherData fetchWeatherData(QueryData qData)
-			throws ConnectException, ImproperDateSelectionException, InvalidLocationException {
+			throws ConnectException, ImproperDateRangeException, InvalidLocationException {
 		// Gathering data for api call
 		String location = qData.getLocation();
 		String startDate = qData.getStartDate().toString();
@@ -66,7 +69,7 @@ public class APIHandler {
 		// If dates won't make valid query, throw exception and give user error message
 		// in calling function
 		if (qData.getStartDate().isAfter(qData.getEndDate())) {
-			throw new ImproperDateSelectionException();
+			throw new ImproperDateRangeException();
 		}
 
 		// Constructing API call
@@ -139,7 +142,6 @@ public class APIHandler {
 
 			// Saving variables
 			actualTemp = dayObject.get("temp").getAsDouble();
-			System.out.println(actualTemp);
 			feelsLikeTemp = dayObject.get("feelslike").getAsDouble();
 			precipAmount = dayObject.get("precip").getAsDouble();
 			precipChance = dayObject.has("precipprob") ? dayObject.get("precipprob").getAsDouble() : 0;

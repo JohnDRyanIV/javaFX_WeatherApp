@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import model.ImproperDateSelectionException;
+import model.ImproperDateRangeException;
 import model.InvalidLocationException;
 import model.QueryData;
 import model.WeatherData;
@@ -74,7 +74,7 @@ public class MainWindow extends Application {
 				statusLabel.setText(
 						"Could not connect to Visual Crossing Weather API. Check your internet connection or try again later.");
 				// e1.printStackTrace();
-			} catch (ImproperDateSelectionException e1) { // Second date chosen is before the first date
+			} catch (ImproperDateRangeException e1) { // Second date chosen is before the first date
 				statusLabel.setText(
 						"Improper Date Selection. Dates must be selected with the second date occuring after the first.");
 				// e1.printStackTrace();

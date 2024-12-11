@@ -3,7 +3,7 @@
  * CS 067 - Fall 2024
  * Dec 9th, 2024
  */
-package controller;
+package model;
 
 /**
  * This exception occurs if there has been an improperly selected date range. In
