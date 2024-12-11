@@ -7,12 +7,15 @@ package model;
 
 import java.util.ArrayList;
 
+/**
+ * This class contains an array of WeatherDatum objects
+ * from which is can construct various charts.
+ */
 public class WeatherData extends ArrayList<WeatherDatum> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2446544465857819183L;
-	public String title;
 
 	/**
 	 * Adds a WeatherDatum and sets the type (hourly or daily).

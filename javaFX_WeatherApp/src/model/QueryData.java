@@ -12,9 +12,9 @@ import java.time.LocalDate;
  */
 public class QueryData {
 
-	private LocalDate startDate;
-	private LocalDate endDate;
-	private String location;
+	private LocalDate startDate;	// Start date of query
+	private LocalDate endDate;	// End date of query
+	private String location;		// Location of query
 
 	/**
 	 * Holds data to be used to construct a query
@@ -23,9 +23,9 @@ public class QueryData {
 	 * @param loc - location of query
 	 */
 	public QueryData(LocalDate start, LocalDate end, String loc) {
-		startDate = start;
-		endDate = end;
-		location = loc;
+		setStartDate(start);
+		setEndDate(end);
+		setLocation(loc);
 	}
 
 	public LocalDate getStartDate() {

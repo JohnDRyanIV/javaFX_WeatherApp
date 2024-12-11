@@ -26,7 +26,12 @@ public class ChartView extends Application {
 		wd = weatherData;
 	}
 
-	// Program start
+	/**
+	 * The ChartView is used to display a variety of different charts based
+	 * on the WeatherData object that it is constructed with. Each of these
+	 * charts can be interacted with by the user with a mouse-hover to get
+	 * more precise data on a specific point.
+	 */
 	@Override
 	public void start(Stage stage) {
 		FlowPane charts = new FlowPane();	// Create a FlowPane for chart layout

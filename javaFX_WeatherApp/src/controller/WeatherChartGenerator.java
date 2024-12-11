@@ -15,7 +15,6 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
 import model.ChartWithTooltip;
 import model.WeatherData;
 import model.WeatherDatum;
@@ -34,13 +33,13 @@ public class WeatherChartGenerator {
 	}
 
 	/**
-	 * Generates a chart based on the specified metric.
+	 * Generates a chart based on the specified chartType.
 	 * 
-	 * @param metricIndex The index corresponding to a field in WeatherDatum (e.g.,
+	 * @param chartType The index corresponding to a field in WeatherDatum (e.g.,
 	 *                    1 for actualTemp, 2 for feelsLikeTemp, etc.)
-	 * @return A LineChart representing the selected metric over time.
+	 * @return A LineChart representing the selected chart type over time.
 	 */
-	public ChartWithTooltip generateChart(int metricIndex) {
+	public ChartWithTooltip generateChart(int chartType) {
 		// Create axes
 		CategoryAxis xAxis = new CategoryAxis();
 		NumberAxis yAxis = new NumberAxis();
@@ -51,13 +50,14 @@ public class WeatherChartGenerator {
 		double minValue = Double.MAX_VALUE;
 		double maxValue = Double.MIN_VALUE;
 
-		// Determine the metric to plot based on the metricIndex
+		// Determine the chart type to plot
 		XYChart.Series<String, Number> series = new XYChart.Series<>();
 
 		// Format date so it only shows month & day
 		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd");
-
-		switch (metricIndex) {
+		
+		// Determine title and axis labels for chart
+		switch (chartType) {
 		case 1:
 			title = "Actual Temperature Over Time";
 			yAxisLabel = "Temperature (°F)";
@@ -94,35 +94,35 @@ public class WeatherChartGenerator {
 			series.setName("Pressure");
 			break;
 		default:
-			throw new IllegalArgumentException("Invalid metric index: " + metricIndex);
+			throw new IllegalArgumentException("Invalid chart type: " + chartType);
 		}
 
-		// Populate the series with data
+		// Populate the series with data depending on chartType
 		for (int i = 0; i < data.size(); i++) {
 			WeatherDatum wd = data.get(i);
 			double value = 0;
 
-			switch (metricIndex) {
+			switch (chartType) {
 			case 1:
-				value = wd.actualTemp;
+				value = wd.getActualTemp();
 				break;
 			case 2:
-				value = wd.feelsLikeTemp;
+				value = wd.getFeelsLikeTemp();
 				break;
 			case 3:
-				value = wd.precipAmount;
+				value = wd.getPrecipAmount();
 				break;
 			case 4:
-				value = wd.precipChance;
+				value = wd.getPrecipChance();
 				break;
 			case 5:
-				value = wd.dewpoint;
+				value = wd.getDewpoint();
 				break;
 			case 6:
-				value = wd.windSpeed;
+				value = wd.getWindSpeed();
 				break;
 			case 7:
-				value = wd.pressure;
+				value = wd.getPressure();
 				break;
 			}
 
@@ -131,22 +131,22 @@ public class WeatherChartGenerator {
 			maxValue = Math.max(maxValue, value);
 
 			// Format date output to MM-dd
-			String formattedDate = wd.date.format(dateFormatter);
+			String formattedDate = wd.getDate().format(dateFormatter);
 
 			// Add date as category and value as data point
 			series.getData().add(new XYChart.Data<>(formattedDate, value));
 		}
 
 		// If the chart is precipitation chance, manually set min and max to 0 and 100
-		if (metricIndex == 4) {
+		if (chartType == 4) {
 			yAxis.setAutoRanging(false);
 			yAxis.setLowerBound(0);
 			yAxis.setUpperBound(100);
-		} else { // If chart isn't precip chance, use this formula to determine bounds on either
-					// side
-					// Adjust y axis
-					// If min and max are equal, give some margin on both sides so they aren't flat
-					// at bottom of chart
+		} else { // If chart isn't precip chance, use this formula to determine bounds on either side
+			
+				// Adjust y axis
+				// If min and max are equal, give some margin on both sides so they aren't flat
+				// at bottom of chart
 			if (Double.compare(minValue, maxValue) == 0) {
 				yAxis.setLowerBound(minValue - 1);
 				yAxis.setUpperBound(minValue + 1);
@@ -169,10 +169,9 @@ public class WeatherChartGenerator {
 		chart.setTitle(title);
 		chart.getData().add(series);
 		
+		// Used to format the tooltips that the chart will give
 		DecimalFormat df = new DecimalFormat("#.##");
-		
-		Region plotArea = (Region) chart.lookup(".chart-plot-background");
-		
+				
 		// Set up the mouse hover event
 		// https://stackoverflow.com/questions/31375922/javafx-how-to-correctly-implement-getvaluefordisplay-on-y-axis-of-a-xy-line
 		// above link helped immensely, couldn't get this working correctly without it
@@ -196,9 +195,9 @@ public class WeatherChartGenerator {
 		});
 		 // Hide tooltip when the mouse exits the chart
 	    chart.setOnMouseExited(event -> tooltip.hide());
-
-		chart.setCreateSymbols(false); // Disable circular symbols for data points
-
+	    // Disable circular symbols for data points
+		chart.setCreateSymbols(false);
+		// Generate chart to return
 		ChartWithTooltip toolChart = new ChartWithTooltip(chart, tooltip);
 
 		return toolChart;

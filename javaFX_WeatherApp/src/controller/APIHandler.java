@@ -36,10 +36,10 @@ public class APIHandler {
 	private final String BASE_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
 	// API key for weather crossing weather API (had to pay for professional cause I reached call limit on free)
 	private final String API_KEY = "9U738TQ6E5H3M3G6U8R97L3JQ"; 
-	private String buildRequest;
-	private String requestResult = "";
-	private final Gson gson = new Gson();
-	private final OkHttpClient client = new OkHttpClient();
+	private String buildRequest;	// builds on base url
+	private String requestResult = ""; // converts json response to string for processing
+	private final Gson gson = new Gson(); // Google's gson import help interpret api calls efficiently
+	private final OkHttpClient client = new OkHttpClient(); // OkHttp helps a lot with construction of API calls
 
 	/**
 	 * This class utilizes a user query stored in a QueryData object to construct an

@@ -12,33 +12,32 @@ import java.time.LocalDate;
  */
 public class WeatherDatum {
 
-	public double actualTemp;
-	public double feelsLikeTemp;
-	public double precipAmount;
-	public double precipChance;
-	public double dewpoint;
-	public double windSpeed;
-	public double pressure;
-	public LocalDate date;
+	private double actualTemp;
+	private double feelsLikeTemp;
+	private double precipAmount;
+	private double precipChance;
+	private double dewpoint;
+	private double windSpeed;
+	private double pressure;
+	private LocalDate date;
 
 	public WeatherDatum(double actTemp, double feelTemp, double pAmt, double pCha, double dewp, double wSpeed,
-			double press, LocalDate date) {
-		actualTemp = actTemp;
-		feelsLikeTemp = feelTemp;
-		precipAmount = pAmt;
-		precipChance = pCha;
-		dewpoint = dewp;
-		windSpeed = wSpeed;
-		pressure = press;
-		this.date = date;
-
+			double press, LocalDate d) {
+		setActualTemp(actualTemp);
+		setFeelsLikeTemp(feelTemp);
+		setPrecipAmount(pAmt);
+		setPrecipChance(pCha);
+		setDewpoint(dewp);
+		setWindSpeed(wSpeed);
+		setPressure(press);
+		setDate(d);
 	}
 
 	public double getActualTemp() {
 		return actualTemp;
 	}
 
-	public void setActualTemp(double actualTemp) {
+	private void setActualTemp(double actualTemp) {
 		this.actualTemp = actualTemp;
 	}
 
@@ -46,7 +45,7 @@ public class WeatherDatum {
 		return feelsLikeTemp;
 	}
 
-	public void setFeelsLikeTemp(double feelsLikeTemp) {
+	private void setFeelsLikeTemp(double feelsLikeTemp) {
 		this.feelsLikeTemp = feelsLikeTemp;
 	}
 
@@ -54,7 +53,7 @@ public class WeatherDatum {
 		return precipAmount;
 	}
 
-	public void setPrecipAmount(double precipAmount) {
+	private void setPrecipAmount(double precipAmount) {
 		this.precipAmount = precipAmount;
 	}
 
@@ -62,7 +61,7 @@ public class WeatherDatum {
 		return precipChance;
 	}
 
-	public void setPrecipChance(double precipChance) {
+	private void setPrecipChance(double precipChance) {
 		this.precipChance = precipChance;
 	}
 
@@ -70,7 +69,7 @@ public class WeatherDatum {
 		return dewpoint;
 	}
 
-	public void setDewpoint(double dewpoint) {
+	private void setDewpoint(double dewpoint) {
 		this.dewpoint = dewpoint;
 	}
 
@@ -78,7 +77,7 @@ public class WeatherDatum {
 		return windSpeed;
 	}
 
-	public void setWindSpeed(double windSpeed) {
+	private void setWindSpeed(double windSpeed) {
 		this.windSpeed = windSpeed;
 	}
 
@@ -86,7 +85,7 @@ public class WeatherDatum {
 		return pressure;
 	}
 
-	public void setPressure(double pressure) {
+	private void setPressure(double pressure) {
 		this.pressure = pressure;
 	}
 
@@ -94,7 +93,7 @@ public class WeatherDatum {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	private void setDate(LocalDate date) {
 		this.date = date;
 	}
 
